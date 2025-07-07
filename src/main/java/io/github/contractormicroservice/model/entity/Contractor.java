@@ -1,18 +1,19 @@
 package io.github.contractormicroservice.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
+/**
+ * Класс модели контрагента
+ */
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Contractor {
 
+    @Id
     private String id;
     private String parentId;
     private String name;
@@ -27,7 +28,30 @@ public class Contractor {
     private String createUserId;
     private String modifyUserId;
 
-    @Builder.Default
     private Boolean isActive = true;
+
+    private Country countryEntity;
+    private Industry industryEntity;
+    private OrgForm orgFormEntity;
+
+    public Contractor(String id, String parentId, String name, String nameFull,
+                      String inn, String ogrn, String country, Integer industry,
+                      Integer orgForm, LocalDateTime createDate, LocalDateTime modifyDate,
+                      String createUserId, String modifyUserId) {
+        this.id = id;
+        this.parentId = parentId;
+        this.name = name;
+        this.nameFull = nameFull;
+        this.inn = inn;
+        this.ogrn = ogrn;
+        this.country = country;
+        this.industry = industry;
+        this.orgForm = orgForm;
+        this.createDate = createDate;
+        this.modifyDate = modifyDate;
+        this.createUserId = createUserId;
+        this.modifyUserId = modifyUserId;
+        this.isActive = true;
+    }
 
 }

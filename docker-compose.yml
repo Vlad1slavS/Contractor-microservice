@@ -35,9 +35,9 @@ services:
       SPRING_LIQUIBASE_CHANGE-LOG: classpath:db/changelog/db.changelog-master.yaml
 
       LOGGING_LEVEL_ROOT: INFO
-      LOGGING_LEVEL_IO_GITHUB_CONTRACTORMICROSERVICE: DEBUG
+      LOGGING_LEVEL_IO_GITHUB_CONTRACTORMICROSERVICE: INFO
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: INFO
       LOGGING_PATTERN_CONSOLE: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-      LOGGING_PATTERN_FILE: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
 volumes:
   postgres_data:

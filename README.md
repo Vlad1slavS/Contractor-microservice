@@ -6,7 +6,9 @@
 
 Для локального развертывания приложения необходимо установить:
 
+
 - [Docker](https://docs.docker.com/get-docker/) 
+
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 ## Архитектура
