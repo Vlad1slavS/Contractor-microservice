@@ -3,6 +3,15 @@ databaseChangeLog:
       id: 001-create-country-table
       author: Vladislav Stepanov
       comment: Создание таблицы country
+      preConditions:
+        - onFail: MARK_RAN
+        - or:
+            - not:
+                - tableExists:
+                    tableName: country
+            - sqlCheck:
+                expectedResult: 0
+                sql: "SELECT COUNT(*) FROM country"
       changes:
         - createTable:
             tableName: country
