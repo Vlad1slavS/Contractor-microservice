@@ -10,8 +10,6 @@ public interface OrgFormJdbcRepository {
 
     List<OrgForm> findAllActive();
 
-    OrgForm createOrgForm(OrgForm orgForm);
-
     void synchronizeSequence();
 
 }

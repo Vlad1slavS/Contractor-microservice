@@ -64,22 +64,25 @@ public class CountryIntegrationTest {
         Country russia = Country.builder()
                 .id("RU")
                 .name("Россия")
+                .isNew(true)
                 .build();
 
         Country china = Country.builder()
                 .id("CN")
                 .name("Китай")
+                .isNew(true)
                 .build();
 
         Country ukraine = Country.builder()
                 .id("UA")
                 .name("Украина")
                 .isActive(false)
+                .isNew(true)
                 .build();
 
-        countryRepository.createCountry(russia);
-        countryRepository.createCountry(china);
-        countryRepository.createCountry(ukraine);
+        countryRepository.save(russia);
+        countryRepository.save(china);
+        countryRepository.save(ukraine);
 
         List<Country> activeIndustries = countryRepository.findAllActive();
 
@@ -99,9 +102,10 @@ public class CountryIntegrationTest {
                 .id("RU")
                 .name("Россия")
                 .isActive(true)
+                .isNew(true)
                 .build();
 
-        countryRepository.createCountry(russia);
+        countryRepository.save(russia);
 
         Country country = countryRepository.findById("RU").orElse(null);
         assertThat(country).isNotNull();
@@ -122,9 +126,10 @@ public class CountryIntegrationTest {
                 .id("RU")
                 .name("Россия")
                 .isActive(true)
+                .isNew(true)
                 .build();
 
-        countryRepository.createCountry(existingCountry);
+        countryRepository.save(existingCountry);
 
         CountryDTO countryDTO = CountryDTO.builder()
                 .id("RU")
@@ -152,9 +157,10 @@ public class CountryIntegrationTest {
         Country newCountry = Country.builder()
                 .id("FR")
                 .name("Франция")
+                .isNew(true)
                 .build();
 
-        countryRepository.createCountry(newCountry);
+        countryRepository.save(newCountry);
 
         Optional<Country> savedCountry = countryRepository.findById("FR");
         assertThat(savedCountry).isPresent();
@@ -170,9 +176,10 @@ public class CountryIntegrationTest {
                 .id("RU")
                 .name("Россия")
                 .isActive(true)
+                .isNew(true)
                 .build();
 
-        countryRepository.createCountry(countryToDelete);
+        countryRepository.save(countryToDelete);
 
         mockMvc.perform(delete("/api/v1/country/delete/{id}", "RU"))
                 .andExpect(status().isOk())

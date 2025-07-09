@@ -2,7 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 001-create-country-table
       author: Vladislav Stepanov
-      comment: Create country table
+      comment: Создание таблицы country
       changes:
         - createTable:
             tableName: country

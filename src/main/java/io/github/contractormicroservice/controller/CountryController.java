@@ -2,7 +2,6 @@ package io.github.contractormicroservice.controller;
 
 import io.github.contractormicroservice.model.dto.CountryDTO;
 import io.github.contractormicroservice.service.CountryService;
-import io.github.contractormicroservice.service.CountryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

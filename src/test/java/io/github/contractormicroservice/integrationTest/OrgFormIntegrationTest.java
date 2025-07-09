@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -52,21 +53,24 @@ public class OrgFormIntegrationTest {
         OrgForm activeOrgForm1 = OrgForm.builder()
                 .name("Нотариус")
                 .isActive(true)
+                .isNew(true)
                 .build();
 
         OrgForm activeOrgForm2 = OrgForm.builder()
                 .name("Адвокат")
                 .isActive(true)
+                .isNew(true)
                 .build();
 
         OrgForm inactiveOrgForm = OrgForm.builder()
                 .name("Неактивная огр форма")
                 .isActive(false)
+                .isNew(true)
                 .build();
 
-        orgFormRepository.createOrgForm(activeOrgForm1);
-        orgFormRepository.createOrgForm(activeOrgForm2);
-        orgFormRepository.createOrgForm(inactiveOrgForm);
+        orgFormRepository.save(activeOrgForm1);
+        orgFormRepository.save(activeOrgForm2);
+        orgFormRepository.save(inactiveOrgForm);
 
         List<OrgForm> activeOrgForms = orgFormRepository.findAllActive();
 
@@ -77,12 +81,13 @@ public class OrgFormIntegrationTest {
     }
 
     @Test
-    void createOrgForm_Success() {
+    void save_Success() {
         OrgForm newOrgForm = OrgForm.builder()
                 .name("Нотариус")
+                .isNew(true)
                 .build();
 
-        OrgForm createdOrgForm = orgFormRepository.createOrgForm(newOrgForm);
+        OrgForm createdOrgForm = orgFormRepository.save(newOrgForm);
 
         assertThat(createdOrgForm).isNotNull();
         assertThat(createdOrgForm.getId()).isNotNull();
@@ -98,14 +103,16 @@ public class OrgFormIntegrationTest {
 
         OrgForm orgForm = OrgForm.builder()
                 .name("Нотариус")
+                .isNew(true)
                 .build();
 
         OrgForm orgForm2 = OrgForm.builder()
                 .name("Адвокат")
+                .isNew(true)
                 .build();
 
-        orgFormRepository.createOrgForm(orgForm);
-        OrgForm createdOrgForm = orgFormRepository.createOrgForm(orgForm2);
+        orgFormRepository.save(orgForm);
+        OrgForm createdOrgForm = orgFormRepository.save(orgForm2);
 
         Optional<OrgForm> result = orgFormRepository.findById(createdOrgForm.getId());
         assertThat(result).isPresent();
@@ -121,22 +128,24 @@ public class OrgFormIntegrationTest {
     }
 
     @Test
-    void createOrgForm_WithNullName() {
+    void save_WithNullName() {
         OrgForm orgFormWithNullName = OrgForm.builder()
                 .name(null)
+                .isNew(true)
                 .build();
 
-        assertThatThrownBy(() -> orgFormRepository.createOrgForm(orgFormWithNullName))
-                .isInstanceOf(DataIntegrityViolationException.class);
+        assertThatThrownBy(() -> orgFormRepository.save(orgFormWithNullName))
+                .isInstanceOf(DbActionExecutionException.class);
     }
 
     @Test
-    void createOrgForm_WithEmptyName() {
+    void save_WithEmptyName() {
         OrgForm orgFormWithEmptyName = OrgForm.builder()
                 .name("")
+                .isNew(true)
                 .build();
 
-        OrgForm createdOrgForm = orgFormRepository.createOrgForm(orgFormWithEmptyName);
+        OrgForm createdOrgForm = orgFormRepository.save(orgFormWithEmptyName);
 
         assertThat(createdOrgForm).isNotNull();
         assertThat(createdOrgForm.getId()).isNotNull();

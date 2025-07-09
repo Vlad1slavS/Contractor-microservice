@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ContractorSearch {
+public class ContractorFilter {
 
     @JsonProperty("contractor_id")
     private String contractorId;

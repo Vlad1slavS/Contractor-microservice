@@ -13,8 +13,6 @@ public interface IndustryJdbcRepository {
 
     List<Industry> findAllActive();
 
-    Industry createIndustry(Industry industry);
-
     void synchronizeSequence();
 
 }

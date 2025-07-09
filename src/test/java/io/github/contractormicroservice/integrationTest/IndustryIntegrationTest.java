@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -53,21 +54,24 @@ public class IndustryIntegrationTest {
         Industry activeIndustry1 = Industry.builder()
                 .name("Индустрия 1")
                 .isActive(true)
+                .isNew(true)
                 .build();
 
         Industry activeIndustry2 = Industry.builder()
                 .name("Индустрия 2")
                 .isActive(true)
+                .isNew(true)
                 .build();
 
         Industry inactiveIndustry = Industry.builder()
                 .name("Неактивная индустрия")
                 .isActive(false)
+                .isNew(true)
                 .build();
 
-        industryRepository.createIndustry(activeIndustry1);
-        industryRepository.createIndustry(activeIndustry2);
-        industryRepository.createIndustry(inactiveIndustry);
+        industryRepository.save(activeIndustry1);
+        industryRepository.save(activeIndustry2);
+        industryRepository.save(inactiveIndustry);
 
         List<Industry> activeIndustries = industryRepository.findAllActive();
 
@@ -81,9 +85,10 @@ public class IndustryIntegrationTest {
     void createIndustry_Success() {
         Industry newIndustry = Industry.builder()
                 .name("Новая индустрия")
+                .isNew(true)
                 .build();
 
-        Industry createdIndustry = industryRepository.createIndustry(newIndustry);
+        Industry createdIndustry = industryRepository.save(newIndustry);
 
         assertThat(createdIndustry).isNotNull();
         assertThat(createdIndustry.getId()).isNotNull();
@@ -99,14 +104,16 @@ public class IndustryIntegrationTest {
 
         Industry industry = Industry.builder()
                 .name("Новая индустрия")
+                .isNew(true)
                 .build();
 
         Industry industry2 = Industry.builder()
                 .name("Новая индустрия 2")
+                .isNew(true)
                 .build();
 
-        industryRepository.createIndustry(industry);
-        Industry createdIndustry = industryRepository.createIndustry(industry2);
+        industryRepository.save(industry);
+        Industry createdIndustry = industryRepository.save(industry2);
 
         Optional<Industry> result = industryRepository.findById(createdIndustry.getId());
         assertThat(result).isPresent();
@@ -125,19 +132,21 @@ public class IndustryIntegrationTest {
     void createIndustry_WithNullName() {
         Industry industryWithNullName = Industry.builder()
                 .name(null)
+                .isNew(true)
                 .build();
 
-        assertThatThrownBy(() -> industryRepository.createIndustry(industryWithNullName))
-                .isInstanceOf(DataIntegrityViolationException.class);
+        assertThatThrownBy(() -> industryRepository.save(industryWithNullName))
+                .isInstanceOf(DbActionExecutionException.class);
     }
 
     @Test
     void createIndustry_WithEmptyName() {
         Industry industryWithEmptyName = Industry.builder()
                 .name("")
+                .isNew(true)
                 .build();
 
-        Industry createdIndustry = industryRepository.createIndustry(industryWithEmptyName);
+        Industry createdIndustry = industryRepository.save(industryWithEmptyName);
 
         assertThat(createdIndustry).isNotNull();
         assertThat(createdIndustry.getId()).isNotNull();

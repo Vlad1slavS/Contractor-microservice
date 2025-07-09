@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +27,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> EntityNotFoundException(
             EntityNotFoundException ex, WebRequest request) {
 
-        log.error("Entity not found: {}", ex.getMessage());
-
         Map<String, Object> errorBody = new HashMap<>();
         errorBody.put("error", "Сущность не найдена");
         errorBody.put("message", ex.getMessage());
         errorBody.put("status", HttpStatus.NOT_FOUND.value());
-        errorBody.put("path", request.getDescription(false).replace("uri=", ""));
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
     }
@@ -45,8 +41,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> ValidationExceptions(
             MethodArgumentNotValidException ex, WebRequest request) {
-
-        log.error("Validation error: {}", ex.getMessage());
 
         Map<String, String> validationErrors = new HashMap<>();
 
@@ -62,7 +56,6 @@ public class GlobalExceptionHandler {
         errorBody.put("message", "Переданные данные не прошли валидацию");
         errorBody.put("validationErrors", validationErrors);
         errorBody.put("status", HttpStatus.BAD_REQUEST.value());
-        errorBody.put("path", request.getDescription(false).replace("uri=", ""));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorBody);
     }
@@ -74,13 +67,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> OtherExceptions(
             Exception ex, WebRequest request) {
 
-        log.error("Unexpected error: ", ex);
-
         Map<String, Object> errorBody = new HashMap<>();
         errorBody.put("error", "Внутренняя ошибка сервера");
-        errorBody.put("message", "Произошла непредвиденная ошибка");
+        errorBody.put("message", ex.getMessage());
         errorBody.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorBody.put("path", request.getDescription(false).replace("uri=", ""));
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);
     }

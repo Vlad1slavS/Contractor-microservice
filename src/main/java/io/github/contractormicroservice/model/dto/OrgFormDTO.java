@@ -35,7 +35,7 @@ public class OrgFormDTO {
             description = "Уникальный идентификатор организационной формы",
             example = "1",
             minimum = "1",
-            requiredMode = Schema.RequiredMode.REQUIRED
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private Long id;
 
