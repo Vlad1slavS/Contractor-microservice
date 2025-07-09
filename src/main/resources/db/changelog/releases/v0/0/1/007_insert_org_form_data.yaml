@@ -21,6 +21,21 @@ databaseChangeLog:
             sql: ALTER TABLE org_form ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY
 
       rollback:
-        - delete:
-            tableName: org_form
-            where: "1=1"
+        - createTable:
+            tableName: temp_org_form_rollback
+            columns:
+              - column:
+                  name: id
+                  type: varchar(10)
+        - loadData:
+            file: db/changelog/data/org_form-ids.csv
+            tableName: temp_org_form_rollback
+            relativeToChangelogFile: false
+            columns:
+              - column:
+                  name: id
+                  type: string
+        - sql:
+            sql: DELETE FROM org_form WHERE id IN (SELECT id FROM temp_org_form_rollback)
+        - dropTable:
+            tableName: temp_org_form_rollback

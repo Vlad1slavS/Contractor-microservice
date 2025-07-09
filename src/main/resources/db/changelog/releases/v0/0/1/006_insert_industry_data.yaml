@@ -21,6 +21,21 @@ databaseChangeLog:
         - sql:
             sql: ALTER TABLE industry ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY
       rollback:
-        - delete:
-            tableName: industry
-            where: "1=1"
+        - createTable:
+            tableName: temp_industry_rollback
+            columns:
+              - column:
+                  name: id
+                  type: varchar(10)
+        - loadData:
+            file: db/changelog/data/industry_ids.csv
+            tableName: temp_industry_rollback
+            relativeToChangelogFile: false
+            columns:
+              - column:
+                  name: id
+                  type: string
+        - sql:
+            sql: DELETE FROM industry WHERE id IN (SELECT id FROM temp_industry_rollback)
+        - dropTable:
+            tableName: temp_industry_rollback
