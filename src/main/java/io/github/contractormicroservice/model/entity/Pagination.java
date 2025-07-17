@@ -21,7 +21,8 @@ public class Pagination {
 
     private Boolean hasPrevious;
 
-    public Pagination(Integer page, Integer limit, Integer totalElements) {
+    public Pagination(List<Contractor> contractors, Integer page, Integer limit, Integer totalElements) {
+        this.contractors = contractors;
         this.hasNext = (page * limit) < totalElements;
         this.hasPrevious = page > 1;
         this.page = page;

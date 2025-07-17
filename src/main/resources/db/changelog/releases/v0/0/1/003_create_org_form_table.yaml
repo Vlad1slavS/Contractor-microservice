@@ -2,7 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 003-create-org-form-table
       author: Vladislav Stepanov
-      comment: Create org_form table
+      comment: Создание таблицы org_form
       changes:
         - createTable:
             tableName: org_form

@@ -1,17 +1,27 @@
 package io.github.contractormicroservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.contractormicroservice.model.dto.CountryDTO;
+import io.github.contractormicroservice.model.dto.IndustryDTO;
+import io.github.contractormicroservice.model.dto.OrgFormDTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 
 import java.time.LocalDateTime;
 
 /**
- * Класс модели контрагента
+ * Класс модели контрагента (со связанными сущностями)
  */
 @Data
 @NoArgsConstructor
-public class Contractor {
+@Builder
+@AllArgsConstructor
+public class Contractor implements Persistable<String> {
 
     @Id
     private String id;
@@ -21,37 +31,40 @@ public class Contractor {
     private String inn;
     private String ogrn;
     private String country;
-    private Integer industry;
-    private Integer orgForm;
+    private Long industry;
+    private Long orgForm;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
     private String createUserId;
     private String modifyUserId;
 
+    @Builder.Default
+    @JsonIgnore
     private Boolean isActive = true;
 
-    private Country countryEntity;
-    private Industry industryEntity;
-    private OrgForm orgFormEntity;
+    @Transient
+    private CountryDTO countryEntity;
+    @Transient
+    private IndustryDTO industryEntity;
+    @Transient
+    private OrgFormDTO orgFormEntity;
 
-    public Contractor(String id, String parentId, String name, String nameFull,
-                      String inn, String ogrn, String country, Integer industry,
-                      Integer orgForm, LocalDateTime createDate, LocalDateTime modifyDate,
-                      String createUserId, String modifyUserId) {
-        this.id = id;
-        this.parentId = parentId;
-        this.name = name;
-        this.nameFull = nameFull;
-        this.inn = inn;
-        this.ogrn = ogrn;
-        this.country = country;
-        this.industry = industry;
-        this.orgForm = orgForm;
-        this.createDate = createDate;
-        this.modifyDate = modifyDate;
-        this.createUserId = createUserId;
-        this.modifyUserId = modifyUserId;
-        this.isActive = true;
+    @Transient
+    @JsonIgnore
+    private boolean isNew = false;
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void markAsNew() {
+        this.isNew = true;
+    }
+
+    public void markAsExisting() {
+        this.isNew = false;
     }
 
 }
+

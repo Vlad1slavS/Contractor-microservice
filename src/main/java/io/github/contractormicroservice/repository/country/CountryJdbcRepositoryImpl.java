@@ -2,11 +2,8 @@ package io.github.contractormicroservice.repository.country;
 
 import io.github.contractormicroservice.model.entity.Country;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,19 +32,6 @@ public class CountryJdbcRepositoryImpl implements CountryJdbcRepository {
         return namedParameterJdbcTemplate.query(sql, countryRowMapper);
     }
 
-    @Override
-    @Transactional
-    public Country createCountry(Country country) {
-        String sql = "INSERT INTO country (id, name, is_active) VALUES (:id, :name, :isActive)";
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", country.getId())
-                .addValue("name", country.getName())
-                .addValue("isActive", country.isActive());
-        namedParameterJdbcTemplate.update(sql, parameterSource);
-
-        String selectSql = "SELECT * FROM country WHERE id = :id";
-        return namedParameterJdbcTemplate.queryForObject(selectSql, parameterSource, countryRowMapper);
-    }
-
 }
+
 

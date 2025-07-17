@@ -56,9 +56,8 @@ public class OrgFormServiceImpl implements OrgFormService {
         OrgForm newOrgForm = OrgForm.builder()
                 .name(orgFormDTO.getName())
                 .build();
-        OrgForm savedOrgForm = orgFormRepository.createOrgForm(newOrgForm);
+        OrgForm savedOrgForm = orgFormRepository.save(newOrgForm);
         return OrgFormDTO.fromEntity(savedOrgForm);
     }
 
 }
-

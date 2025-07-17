@@ -2,7 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 002-create-industry-table
       author: Vladislav Stepanov
-      comment: Create industry table
+      comment: Создание таблицы industry
       changes:
         - createTable:
             tableName: industry

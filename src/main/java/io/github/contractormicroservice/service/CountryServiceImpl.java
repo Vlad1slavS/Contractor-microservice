@@ -53,12 +53,11 @@ public class CountryServiceImpl implements CountryService {
                     .id(countryDTO.getId())
                     .name(countryDTO.getName())
                     .build();
-            countryRepository.createCountry(newCountry);
+            countryRepository.save(newCountry);
             return CountryDTO.fromEntity(newCountry);
         }
 
     }
 
 }
-
 

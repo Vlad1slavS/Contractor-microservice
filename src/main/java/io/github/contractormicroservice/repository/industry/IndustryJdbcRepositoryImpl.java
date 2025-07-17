@@ -2,9 +2,7 @@ package io.github.contractormicroservice.repository.industry;
 
 import io.github.contractormicroservice.model.entity.Industry;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,18 +32,6 @@ public class IndustryJdbcRepositoryImpl implements IndustryJdbcRepository {
     public List<Industry> findAllActive() {
         String sql = "SELECT * FROM industry WHERE is_active = true";
         return namedParameterJdbcTemplate.query(sql, industryRowMapper);
-    }
-
-    @Override
-    @Transactional
-    public Industry createIndustry(Industry industry) {
-        String sql = "INSERT INTO industry (name, is_active) VALUES (:name, :isActive) RETURNING id, name";
-
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("name", industry.getName())
-                .addValue("isActive", industry.isActive());
-
-        return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, industryRowMapper);
     }
 
     @Override

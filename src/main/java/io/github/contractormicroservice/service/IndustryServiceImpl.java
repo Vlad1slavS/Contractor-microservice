@@ -56,7 +56,7 @@ public class IndustryServiceImpl implements IndustryService {
         Industry newIndustry = Industry.builder()
                 .name(industryDTO.getName())
                 .build();
-        Industry savedIndustry = industryRepository.createIndustry(newIndustry);
+        Industry savedIndustry = industryRepository.save(newIndustry);
         return IndustryDTO.fromEntity(savedIndustry);
     }
 

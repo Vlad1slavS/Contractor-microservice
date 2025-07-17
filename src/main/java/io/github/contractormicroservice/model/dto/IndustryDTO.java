@@ -37,7 +37,7 @@ public class IndustryDTO {
             description = "Уникальный идентификатор индустриального кода",
             example = "1",
             minimum = "1",
-            requiredMode = Schema.RequiredMode.REQUIRED
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     @NotBlank(message = "id индустриального кода не может быть пустым")
     private Long id;

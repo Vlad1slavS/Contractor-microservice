@@ -11,6 +11,4 @@ public interface CountryJdbcRepository {
 
     List<Country> findAllActive();
 
-    Country createCountry(Country country);
-
 }

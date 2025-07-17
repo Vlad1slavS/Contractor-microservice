@@ -2,12 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 005-insert-country-data
       author: Vladislav Stepanov
-      comment: Insert initial country data from CSV
-      preConditions:
-        - onFail: MARK_RAN
-        - sqlCheck:
-            expectedResult: 0
-            sql: SELECT COUNT(*) FROM country
+      comment: Вставка данных в таблицу country
       changes:
         - loadData:
             file: db/changelog/data/country.csv
@@ -26,6 +21,22 @@ databaseChangeLog:
                   type: boolean
                   defaultValueBoolean: true
       rollback:
-        - delete:
-            tableName: country
-            where: "1=1"
+        - createTable:
+            tableName: temp_country_rollback
+            columns:
+              - column:
+                  name: id
+                  type: varchar(10)
+        - loadData:
+            file: db/changelog/data/country_ids.csv
+            tableName: temp_country_rollback
+            relativeToChangelogFile: false
+            columns:
+              - column:
+                  name: id
+                  type: string
+        - sql:
+            sql: DELETE FROM country WHERE id IN (SELECT id FROM temp_country_rollback)
+        - dropTable:
+            tableName: temp_country_rollback
+

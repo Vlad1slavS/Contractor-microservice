@@ -2,9 +2,7 @@ package io.github.contractormicroservice.repository.orgForm;
 
 import io.github.contractormicroservice.model.entity.OrgForm;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,18 +29,6 @@ public class OrgFormJdbcRepositoryImpl implements OrgFormJdbcRepository {
     public List<OrgForm> findAllActive() {
         String sql = "SELECT * FROM org_form WHERE is_active = true";
         return namedParameterJdbcTemplate.query(sql, orgFormRowMapper);
-    }
-
-    @Override
-    @Transactional
-    public OrgForm createOrgForm(OrgForm orgForm) {
-        String sql = "INSERT INTO org_form (name, is_active) VALUES (:name, :isActive) RETURNING id, name";
-
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("name", orgForm.getName())
-                .addValue("isActive", orgForm.isActive());
-
-        return namedParameterJdbcTemplate.queryForObject(sql, parameterSource, orgFormRowMapper);
     }
 
     @Override
