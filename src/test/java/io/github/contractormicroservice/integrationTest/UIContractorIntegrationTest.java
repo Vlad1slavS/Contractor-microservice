@@ -28,6 +28,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -80,6 +82,7 @@ public class UIContractorIntegrationTest {
         Contractor russianContractor1 = Contractor.builder()
                 .id("CONTR001")
                 .name("ООО Российская компания")
+                .industry(2L)
                 .country("RUS")
                 .countryEntity(russiaCountry)
                 .createDate(LocalDateTime.now())
@@ -142,7 +145,7 @@ public class UIContractorIntegrationTest {
      */
     @Test
     @WithMockUser(roles = "CONTRACTOR_RUS")
-    public void searchByName_ContractorRusRole_OnlyMatchingRussianContractors() throws Exception {
+    void searchByName_ContractorRusRole_OnlyMatchingRussianContractors() throws Exception {
         ContractorFilter filter = new ContractorFilter();
         filter.setContractorSearch("Российская");
 
@@ -164,7 +167,7 @@ public class UIContractorIntegrationTest {
      */
     @Test
     @WithMockUser(roles = "CONTRACTOR_SUPERUSER")
-    public void searchContractors_SuperuserRole_AllContractors() throws Exception {
+    void searchContractors_SuperuserRole_AllContractors() throws Exception {
         ContractorFilter filter = new ContractorFilter();
 
         mockMvc.perform(post("/api/v1/ui/contractor/search")
@@ -178,5 +181,30 @@ public class UIContractorIntegrationTest {
                 .andExpect(jsonPath("$.contractors", hasSize(3)))
                 .andExpect(jsonPath("$.contractors[*].countryEntity.id", containsInAnyOrder("RUS", "RUS", "ARM")));
     }
+
+    /**
+     * Тест получения индустриального кода с ролью USER
+     */
+    @Test
+    @WithMockUser(roles = "USER")
+    void getIndustryByIdWithRoleUser_IndustryById() throws Exception {
+        mockMvc.perform(get("/api/v1/ui/industry/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Авиастроение")));
+    }
+
+    /**
+     * Тест попытки удаления страны с недостающими правами (USER)
+     */
+    @Test
+    @WithMockUser(roles = "USER")
+    void tryDeleteCountry_WithoutSuperUserRole_AccessDenied() throws Exception {
+        mockMvc.perform(delete("/api/v1/ui/country/delete/{id}", "ARM"))
+                .andExpect(status().isForbidden());
+    }
+
+
 
 }
