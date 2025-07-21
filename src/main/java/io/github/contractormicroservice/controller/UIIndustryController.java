@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/ui/industry")
-@Tag(name = "UI Countries", description = "Защищенное API для работы со странами")
+@Tag(name = "UI Industry", description = "Защищенное API для работы со странами")
 @Slf4j
 public class UIIndustryController {
 
@@ -37,7 +37,15 @@ public class UIIndustryController {
         this.industryService = industryService;
     }
 
-    @Operation(summary = "Получение всех активных индустриальных кодов")
+    @Operation(summary = "Получение всех активных индустриальных кодов",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                   Получение всех активных индустриальных кодов с учетом ролевых ограничений:
+                    **Доступ по ролям:**
+                    - **USER** - может просматривать, но не редактировать, справочную информацию
+                    - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                   """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Список индустриальных кодов успешно получен",
                     content = @Content(
@@ -68,7 +76,16 @@ public class UIIndustryController {
         return industryService.getAllActive();
     }
 
-    @Operation(summary = "Получить индустриальный код по ID")
+    @Operation(summary = "Получить индустриальный код по ID",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                   Получить индустриальный код по ID с учетом ролевых ограничений:
+                   
+                    **Доступ по ролям:**
+                    - **USER** - может просматривать, но не редактировать, справочную информацию
+                    - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                   """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -110,7 +127,15 @@ public class UIIndustryController {
         return ResponseEntity.ok(industryDTO);
     }
 
-    @Operation(summary = "Удалить индустриальный код")
+    @Operation(summary = "Удалить индустриальный код",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                    Удалить индустриальный код с учетом ролевых ограничений:
+                    
+                    **Доступ по ролям:**
+                    - **CONTRACTOR_SUPERUSER** - имеет возможность удаления записей
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                    """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -153,7 +178,15 @@ public class UIIndustryController {
         return ResponseEntity.ok(deletedIndustry);
     }
 
-    @Operation(summary = "Сохранить индустриальный код")
+    @Operation(summary = "Сохранить индустриальный код",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                    Сохранить индустриальный код с учетом ролевых ограничений:
+                    
+                    **Доступ по ролям:**
+                    - **CONTRACTOR_SUPERUSER** - имеет возможность сохранения/редактирования записей
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                    """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",

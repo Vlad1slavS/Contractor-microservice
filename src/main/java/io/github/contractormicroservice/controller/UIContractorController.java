@@ -36,7 +36,16 @@ public class UIContractorController {
         this.contractorService = contractorService;
     }
 
-    @Operation(summary = "Поиск контрагентов с пагинацией и фильтрами")
+    @Operation(summary = "Поиск контрагентов с пагинацией и фильтрами",
+            description = """
+                    Поиск контрагентов с учетом ролевых ограничений:
+                    **Доступ по ролям:**
+                    - **CONTRACTOR_RUS** - только российские контрагенты (country = RUS)
+                    - **CONTRACTOR_SUPERUSER** - все контрагенты без ограничений
+                    - **SUPERUSER** - все контрагенты без ограничений
+                    **Примечание:** Пользователи с ролью CONTRACTOR_RUS автоматически получают фильтр по стране RUS
+                    """,
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

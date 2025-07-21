@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/ui/orgForm")
-@Tag(name = "UI Countries", description = "Защищенное API для работы со странами")
+@Tag(name = "UI OrgForm", description = "Защищенное API для работы со странами")
 @Slf4j
 public class UIOrgFormController {
 
@@ -37,7 +37,16 @@ public class UIOrgFormController {
         this.orgFormService = orgFormService;
     }
 
-    @Operation(summary = "Получение всех активных организационных форм")
+    @Operation(summary = "Получение всех активных организационных форм",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                    Получение всех активных организационных форм с учетом ролевых ограничений:
+                    
+                    **Доступ по ролям:**
+                    - **USER** - может просматривать, но не редактировать, справочную информацию
+                    - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                    """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Список организационных форм успешно получен",
@@ -68,7 +77,16 @@ public class UIOrgFormController {
         return orgFormService.getAllActive();
     }
 
-    @Operation(summary = "Получить организационную форму по ID")
+    @Operation(summary = "Получить организационную форму по ID",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                    Получение организационной формы по ID с учетом ролевых ограничений:
+                    
+                    **Доступ по ролям:**
+                    - **USER** - может просматривать, но не редактировать, справочную информацию
+                    - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                    """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -109,7 +127,15 @@ public class UIOrgFormController {
         return orgFormService.getOne(id);
     }
 
-    @Operation(summary = "Удалить организационную форму")
+    @Operation(summary = "Удалить организационную форму",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                    Удалить организационную форму с учетом ролевых ограничений:
+                    
+                    **Доступ по ролям:**
+                    - **CONTRACTOR_SUPERUSER** - имеет возможность редактирования (сохранения и удаления)
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                    """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -152,7 +178,15 @@ public class UIOrgFormController {
         return deletedOrgForm;
     }
 
-    @Operation(summary = "Сохранить организационную форму")
+    @Operation(summary = "Сохранить организационную форму",
+            security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
+            description = """
+                    Сохранить организационную форму с учетом ролевых ограничений:
+                    
+                    **Доступ по ролям:**
+                    - **CONTRACTOR_SUPERUSER** - имеет возможность редактирования (сохранения и удаления)
+                    - **SUPERUSER** - имеет полный доступ к сервису
+                    """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
