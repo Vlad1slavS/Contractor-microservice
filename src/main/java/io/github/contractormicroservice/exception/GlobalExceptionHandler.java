@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
      * Обработка исключения EntityNotFoundException
      */
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> EntityNotFoundException(
+    public ResponseEntity<Map<String, Object>> entityNotFoundException(
             EntityNotFoundException ex, WebRequest request) {
 
         Map<String, Object> errorBody = new HashMap<>();
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
      * Обработка ошибок валидации
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> ValidationExceptions(
+    public ResponseEntity<Map<String, Object>> validationExceptions(
             MethodArgumentNotValidException ex, WebRequest request) {
 
         Map<String, String> validationErrors = new HashMap<>();
@@ -60,18 +60,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorBody);
     }
 
-    /**
-     * Обработка всех остальных исключений
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> OtherExceptions(
-            Exception ex, WebRequest request) {
-
-        Map<String, Object> errorBody = new HashMap<>();
-        errorBody.put("error", "Внутренняя ошибка сервера");
-        errorBody.put("message", ex.getMessage());
-        errorBody.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);
-    }
 }
