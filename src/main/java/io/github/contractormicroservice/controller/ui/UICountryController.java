@@ -1,7 +1,7 @@
-package io.github.contractormicroservice.controller;
+package io.github.contractormicroservice.controller.ui;
 
-import io.github.contractormicroservice.model.dto.OrgFormDTO;
-import io.github.contractormicroservice.service.OrgFormService;
+import io.github.contractormicroservice.model.dto.CountryDTO;
+import io.github.contractormicroservice.service.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,42 +26,41 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ui/orgForm")
-@Tag(name = "UI OrgForm", description = "Защищенное API для работы со странами")
+@RequestMapping("/api/v1/ui/country")
+@Tag(name = "UI Countries", description = "Защищенное API для работы со странами")
 @Slf4j
-public class UIOrgFormController {
+public class UICountryController {
 
-    private final OrgFormService orgFormService;
+    private final CountryService countryService;
 
-    public UIOrgFormController(OrgFormService orgFormService) {
-        this.orgFormService = orgFormService;
+    public UICountryController(CountryService countryService) {
+        this.countryService = countryService;
     }
 
-    @Operation(summary = "Получение всех активных организационных форм",
+    @Operation(summary = "Получение всех активных стран",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                    Получение всех активных организационных форм с учетом ролевых ограничений:
-                    
+                   Получение всех активных стран с учетом ролевых ограничений:
+                   
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
                     - **SUPERUSER** - имеет полный доступ к сервису
-                    """)
+                   """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Список организационных форм успешно получен",
+            @ApiResponse(responseCode = "200", description = "Список стран успешно получен",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = OrgFormDTO.class),
+                            schema = @Schema(implementation = CountryDTO.class),
                             examples = @ExampleObject(value = """
                                     [
                                     {
-                                        "id": 1,
-                                        "name": "ООО"
+                                        "id": "RU",
+                                        "name": "Россия"
                                     },
                                     {
-                                        "id": 2,
-                                        "name": "ИП"
+                                        "id": "CN",
+                                        "name": "Китай"
                                     }
                                     ]
                                     """
@@ -71,47 +70,47 @@ public class UIOrgFormController {
     })
     @PreAuthorize("hasAnyRole('USER', 'CREDIT_USER', " +
             "'CONTRACTOR_RUS', 'CONTRACTOR_SUPERUSER', 'SUPERUSER')")
-    @GetMapping("/all")
-    public List<OrgFormDTO> getAll() {
-        log.info("Request to get all org forms");
-        return orgFormService.getAllActive();
+    @GetMapping("/country/all")
+    public List<CountryDTO> getAllCountries() {
+        log.info("UI Request to get all countries");
+        return countryService.getAllActive();
     }
 
-    @Operation(summary = "Получить организационную форму по ID",
+    @Operation(summary = "Получить страну по ID",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                    Получение организационной формы по ID с учетом ролевых ограничений:
-                    
+                   Получить страну по ID с учетом ролевых ограничений:
+                   
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
                     - **SUPERUSER** - имеет полный доступ к сервису
-                    """)
+                   """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Организационная форма найдена",
+                    description = "Страна найдена",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = OrgFormDTO.class),
+                            schema = @Schema(implementation = CountryDTO.class),
                             examples = @ExampleObject(
                                     value = """
-                                    {
-                                        "id": 1,
-                                        "name": "ООО"
-                                    }
-                                    """
+                                            {
+                                                "id": "RU",
+                                                "name": "Россия"
+                                            }
+                                            """
                             )
                     )
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Организационная форма не найдена",
+                    description = "Страна не найдена",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(value = """
                                     {
-                                        "message": "OrgForm not found with id: 999",
+                                        "message": "Country not found with id: 999",
                                         "timestamp": "timestamp"
                                     }
                                     """
@@ -122,32 +121,33 @@ public class UIOrgFormController {
     @PreAuthorize("hasAnyRole('USER', 'CREDIT_USER', " +
             "'CONTRACTOR_RUS', 'CONTRACTOR_SUPERUSER', 'SUPERUSER')")
     @GetMapping("/{id}")
-    public OrgFormDTO getOne(@PathVariable Long id) {
-        log.info("Request to get org form by id: {}", id);
-        return orgFormService.getOne(id);
+    public ResponseEntity<CountryDTO> getOne(@PathVariable String id) {
+        log.info("UI Request to get country by id: {}", id);
+        CountryDTO country = countryService.getOne(id);
+        return ResponseEntity.ok(country);
     }
 
-    @Operation(summary = "Удалить организационную форму",
+    @Operation(summary = "Удалить страну",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                    Удалить организационную форму с учетом ролевых ограничений:
+                    Удалить страну с учетом ролевых ограничений:
                     
                     **Доступ по ролям:**
-                    - **CONTRACTOR_SUPERUSER** - имеет возможность редактирования (сохранения и удаления)
+                    - **CONTRACTOR_SUPERUSER** - имеет возможность удаления записей
                     - **SUPERUSER** - имеет полный доступ к сервису
                     """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Организационная форма успешно удалена",
+                    description = "Страна успешно удалена",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = OrgFormDTO.class),
+                            schema = @Schema(implementation = CountryDTO.class),
                             examples = @ExampleObject(
                                     value = """
                                     {
-                                        "id": 1,
-                                        "name": "ООО"
+                                        "id": "RU",
+                                        "name": "Россия"
                                     }
                                     """
                             )
@@ -155,13 +155,13 @@ public class UIOrgFormController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Организационная форма не найдена",
+                    description = "Страна не найдена",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
                                     value = """
                                     {
-                                        "message": "OrgForm not found with id: 999",
+                                        "message": "Country not found with id: 999",
                                         "timestamp": "timestamp"
                                     }
                                     """
@@ -171,35 +171,35 @@ public class UIOrgFormController {
     })
     @PreAuthorize("hasAnyRole('CONTRACTOR_SUPERUSER', 'SUPERUSER')")
     @DeleteMapping("/delete/{id}")
-    public OrgFormDTO delete(@PathVariable Long id) {
-        log.info("Request to delete org form with id: {}", id);
-        OrgFormDTO deletedOrgForm = orgFormService.deleteOne(id);
-        log.info("Org form deleted: {}", deletedOrgForm);
-        return deletedOrgForm;
+    public ResponseEntity<CountryDTO> delete(@PathVariable String id) {
+        log.info("Request to delete country with id: {}", id);
+        CountryDTO deletedCountry = countryService.deleteOne(id);
+        log.info("Country deleted: {}", deletedCountry);
+        return ResponseEntity.ok(deletedCountry);
     }
 
-    @Operation(summary = "Сохранить организационную форму",
+    @Operation(summary = "Сохранить страну",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                    Сохранить организационную форму с учетом ролевых ограничений:
+                    Сохранить страну с учетом ролевых ограничений:
                     
                     **Доступ по ролям:**
-                    - **CONTRACTOR_SUPERUSER** - имеет возможность редактирования (сохранения и удаления)
+                    - **CONTRACTOR_SUPERUSER** - имеет возможность сохранения записей
                     - **SUPERUSER** - имеет полный доступ к сервису
                     """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "Организационная форма успешно сохранена",
+                    description = "Страна успешно сохранена",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = OrgFormDTO.class),
+                            schema = @Schema(implementation = CountryDTO.class),
                             examples = @ExampleObject(
-                                    name = "Сохраненная организационная форма",
+                                    name = "Сохраненная страна",
                                     value = """
                                     {
-                                        "id": 1,
-                                        "name": "ООО"
+                                        "id": "RU",
+                                        "name": "Россия"
                                     }
                                     """
                             )
@@ -228,44 +228,46 @@ public class UIOrgFormController {
                     )
             )
     })
-    @PreAuthorize("hasAnyRole('CONTRACTOR_SUPERUSER', 'SUPERUSER')")
     @PutMapping("/save")
-    public ResponseEntity<OrgFormDTO> save(
-            @Parameter(description = "Организационная форма",
+    @PreAuthorize("hasAnyRole('CONTRACTOR_SUPERUSER', 'SUPERUSER')")
+    public ResponseEntity<CountryDTO> save(
+            @Parameter(description = "Страна",
                     required = true,
-                    schema = @Schema(implementation = OrgFormDTO.class))
+                    schema = @Schema(implementation = CountryDTO.class))
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Организационная форма",
+                    description = "Страна",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = OrgFormDTO.class),
+                            schema = @Schema(implementation = CountryDTO.class),
                             examples = {
                                     @ExampleObject(
-                                            name = "Создание новой организационной формы",
+                                            name = "Создание новой страны",
                                             value = """
                                             {
-                                                "name": "ПАО"
+                                                "id": "DE",
+                                                "name": "Германия"
                                             }
                                             """
                                     ),
                                     @ExampleObject(
-                                            name = "Обновление существующей формы",
+                                            name = "Обновление существующей страны",
                                             value = """
                                             {
-                                                "id": 1,
-                                                "name": "ООО"
+                                                "id": "RU",
+                                                "name": "Российская Федерация"
                                             }
                                             """
                                     )
                             }
                     )
             )
-            @Valid @RequestBody OrgFormDTO orgFormDTO) {
-        log.info("Request to save org form: {}", orgFormDTO);
-        OrgFormDTO savedOrgForm = orgFormService.save(orgFormDTO);
-        log.info("Org form saved: {}", savedOrgForm);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedOrgForm);
+            @Valid @RequestBody CountryDTO countryDTO) {
+        log.info("Request to save country: {}", countryDTO);
+
+        CountryDTO savedCountry = countryService.save(countryDTO);
+        log.info("Country saved: {}", savedCountry);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCountry);
     }
 
 }

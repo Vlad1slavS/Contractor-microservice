@@ -1,4 +1,4 @@
-package io.github.contractormicroservice.controller;
+package io.github.contractormicroservice.controller.ui;
 
 import io.github.contractormicroservice.model.dto.ContractorDTO;
 import io.github.contractormicroservice.model.entity.ContractorFilter;

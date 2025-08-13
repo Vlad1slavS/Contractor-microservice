@@ -1,5 +1,6 @@
 package io.github.contractormicroservice.service;
 
+import io.github.auditlib.annotation.AuditLog;
 import io.github.contractormicroservice.exception.EntityNotFoundException;
 import io.github.contractormicroservice.model.dto.IndustryDTO;
 import io.github.contractormicroservice.model.entity.Industry;
@@ -40,6 +41,7 @@ public class IndustryServiceImpl implements IndustryService {
         return IndustryDTO.fromEntity(industry);
     }
 
+    @AuditLog(logLevel = AuditLog.LogLevel.DEBUG)
     public IndustryDTO save(IndustryDTO industryDTO) {
 
         if (industryDTO.getId() != null) {

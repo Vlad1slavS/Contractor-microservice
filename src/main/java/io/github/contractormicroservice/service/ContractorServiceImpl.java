@@ -1,5 +1,6 @@
 package io.github.contractormicroservice.service;
 
+import io.github.auditlib.annotation.AuditLog;
 import io.github.contractormicroservice.exception.EntityNotFoundException;
 import io.github.contractormicroservice.model.dto.ContractorDTO;
 import io.github.contractormicroservice.model.entity.Contractor;
@@ -34,6 +35,7 @@ public class ContractorServiceImpl implements ContractorService {
         this.orgFormRepository = orgFormRepository;
     }
 
+    @AuditLog(logLevel = AuditLog.LogLevel.DEBUG)
     public Contractor getOne(String id) {
         return contractorRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new EntityNotFoundException("Contractor not found with id: " + id));

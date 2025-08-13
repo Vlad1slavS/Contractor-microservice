@@ -2,7 +2,7 @@ package io.github.contractormicroservice.controllerTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.contractormicroservice.config.SecurityConfig;
-import io.github.contractormicroservice.controller.UICountryController;
+import io.github.contractormicroservice.controller.ui.UICountryController;
 import io.github.contractormicroservice.model.dto.CountryDTO;
 import io.github.contractormicroservice.model.entity.Contractor;
 import io.github.contractormicroservice.model.entity.ContractorFilter;

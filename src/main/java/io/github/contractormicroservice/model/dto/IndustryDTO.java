@@ -39,7 +39,8 @@ public class IndustryDTO {
             minimum = "1",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
-    @NotBlank(message = "id индустриального кода не может быть пустым")
+    @NotNull(message = "id индустриального кода не может быть null")
+    @Positive(message = "id индустриального кода должен быть положительным числом")
     private Long id;
 
     @Schema(

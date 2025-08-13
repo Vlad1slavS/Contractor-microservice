@@ -1,7 +1,7 @@
-package io.github.contractormicroservice.controller;
+package io.github.contractormicroservice.controller.ui;
 
-import io.github.contractormicroservice.model.dto.CountryDTO;
-import io.github.contractormicroservice.service.CountryService;
+import io.github.contractormicroservice.model.dto.IndustryDTO;
+import io.github.contractormicroservice.service.IndustryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,60 +26,60 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ui/country")
-@Tag(name = "UI Countries", description = "Защищенное API для работы со странами")
+@RequestMapping("/api/v1/ui/industry")
+@Tag(name = "UI Industry", description = "Защищенное API для работы со странами")
 @Slf4j
-public class UICountryController {
+public class UIIndustryController {
 
-    private final CountryService countryService;
+    private final IndustryService industryService;
 
-    public UICountryController(CountryService countryService) {
-        this.countryService = countryService;
+    public UIIndustryController(IndustryService industryService) {
+        this.industryService = industryService;
     }
 
-    @Operation(summary = "Получение всех активных стран",
+    @Operation(summary = "Получение всех активных индустриальных кодов",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                   Получение всех активных стран с учетом ролевых ограничений:
-                   
+                   Получение всех активных индустриальных кодов с учетом ролевых ограничений:
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
                     - **SUPERUSER** - имеет полный доступ к сервису
                    """)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Список стран успешно получен",
+            @ApiResponse(responseCode = "200", description = "Список индустриальных кодов успешно получен",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CountryDTO.class),
+                            schema = @Schema(implementation = IndustryDTO.class),
                             examples = @ExampleObject(value = """
                                     [
                                     {
-                                        "id": "RU",
-                                        "name": "Россия"
+                                        "id": 1,
+                                        "name": "Строительство"
                                     },
                                     {
-                                        "id": "CN",
-                                        "name": "Китай"
+                                        "id": 2,
+                                        "name": "Транспорт"
                                     }
                                     ]
                                     """
                             )
                     )
             )
+
     })
     @PreAuthorize("hasAnyRole('USER', 'CREDIT_USER', " +
             "'CONTRACTOR_RUS', 'CONTRACTOR_SUPERUSER', 'SUPERUSER')")
-    @GetMapping("/country/all")
-    public List<CountryDTO> getAllCountries() {
-        log.info("UI Request to get all countries");
-        return countryService.getAllActive();
+    @GetMapping("/all")
+    public List<IndustryDTO> getAll() {
+        log.info("Request to get all industries");
+        return industryService.getAllActive();
     }
 
-    @Operation(summary = "Получить страну по ID",
+    @Operation(summary = "Получить индустриальный код по ID",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                   Получить страну по ID с учетом ролевых ограничений:
+                   Получить индустриальный код по ID с учетом ролевых ограничений:
                    
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
@@ -89,15 +89,15 @@ public class UICountryController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Страна найдена",
+                    description = "Индустриальный код найден",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CountryDTO.class),
+                            schema = @Schema(implementation = IndustryDTO.class),
                             examples = @ExampleObject(
                                     value = """
                                             {
-                                                "id": "RU",
-                                                "name": "Россия"
+                                                "id": 1,
+                                                "name": "Строительство"
                                             }
                                             """
                             )
@@ -105,12 +105,12 @@ public class UICountryController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Страна не найдена",
+                    description = "Индустриальный код не найден",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(value = """
                                     {
-                                        "message": "Country not found with id: 999",
+                                        "message": "Industry not found with id: 999",
                                         "timestamp": "timestamp"
                                     }
                                     """
@@ -121,16 +121,16 @@ public class UICountryController {
     @PreAuthorize("hasAnyRole('USER', 'CREDIT_USER', " +
             "'CONTRACTOR_RUS', 'CONTRACTOR_SUPERUSER', 'SUPERUSER')")
     @GetMapping("/{id}")
-    public ResponseEntity<CountryDTO> getOne(@PathVariable String id) {
-        log.info("UI Request to get country by id: {}", id);
-        CountryDTO country = countryService.getOne(id);
-        return ResponseEntity.ok(country);
+    public ResponseEntity<IndustryDTO> getOne(@PathVariable Long id) {
+        log.info("Request to get industry by id: {}", id);
+        IndustryDTO industryDTO = industryService.getOne(id);
+        return ResponseEntity.ok(industryDTO);
     }
 
-    @Operation(summary = "Удалить страну",
+    @Operation(summary = "Удалить индустриальный код",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                    Удалить страну с учетом ролевых ограничений:
+                    Удалить индустриальный код с учетом ролевых ограничений:
                     
                     **Доступ по ролям:**
                     - **CONTRACTOR_SUPERUSER** - имеет возможность удаления записей
@@ -139,15 +139,15 @@ public class UICountryController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Страна успешно удалена",
+                    description = "Индустриальный код успешно удален",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CountryDTO.class),
+                            schema = @Schema(implementation = IndustryDTO.class),
                             examples = @ExampleObject(
                                     value = """
                                     {
-                                        "id": "RU",
-                                        "name": "Россия"
+                                        "id": 1,
+                                        "name": "Строительство"
                                     }
                                     """
                             )
@@ -155,13 +155,13 @@ public class UICountryController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Страна не найдена",
+                    description = "Индустриальный код не найден",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
                                     value = """
                                     {
-                                        "message": "Country not found with id: 999",
+                                        "message": "Industry not found with id: 999",
                                         "timestamp": "timestamp"
                                     }
                                     """
@@ -171,35 +171,35 @@ public class UICountryController {
     })
     @PreAuthorize("hasAnyRole('CONTRACTOR_SUPERUSER', 'SUPERUSER')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<CountryDTO> delete(@PathVariable String id) {
-        log.info("Request to delete country with id: {}", id);
-        CountryDTO deletedCountry = countryService.deleteOne(id);
-        log.info("Country deleted: {}", deletedCountry);
-        return ResponseEntity.ok(deletedCountry);
+    public ResponseEntity<IndustryDTO> delete(@PathVariable Long id) {
+        log.info("Request to delete industry with id: {}", id);
+        IndustryDTO deletedIndustry = industryService.deleteOne(id);
+        log.info("Industry deleted: {}", deletedIndustry);
+        return ResponseEntity.ok(deletedIndustry);
     }
 
-    @Operation(summary = "Сохранить страну",
+    @Operation(summary = "Сохранить индустриальный код",
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
-                    Сохранить страну с учетом ролевых ограничений:
+                    Сохранить индустриальный код с учетом ролевых ограничений:
                     
                     **Доступ по ролям:**
-                    - **CONTRACTOR_SUPERUSER** - имеет возможность сохранения записей
+                    - **CONTRACTOR_SUPERUSER** - имеет возможность сохранения/редактирования записей
                     - **SUPERUSER** - имеет полный доступ к сервису
                     """)
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "Страна успешно сохранена",
+                    description = "Индустриальный код успешно сохранен",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CountryDTO.class),
+                            schema = @Schema(implementation = IndustryDTO.class),
                             examples = @ExampleObject(
-                                    name = "Сохраненная страна",
+                                    name = "Сохраненный индустриальный код",
                                     value = """
                                     {
-                                        "id": "RU",
-                                        "name": "Россия"
+                                        "id": 1,
+                                        "name": "Строительство"
                                     }
                                     """
                             )
@@ -228,46 +228,46 @@ public class UICountryController {
                     )
             )
     })
-    @PutMapping("/save")
     @PreAuthorize("hasAnyRole('CONTRACTOR_SUPERUSER', 'SUPERUSER')")
-    public ResponseEntity<CountryDTO> save(
-            @Parameter(description = "Страна",
+    @PutMapping("/save")
+    public ResponseEntity<IndustryDTO> save(
+            @Parameter(description = "Индустриальный код",
                     required = true,
-                    schema = @Schema(implementation = CountryDTO.class))
+                    schema = @Schema(implementation = IndustryDTO.class))
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Страна",
+                    description = "Индустриальный код",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CountryDTO.class),
+                            schema = @Schema(implementation = IndustryDTO.class),
                             examples = {
                                     @ExampleObject(
-                                            name = "Создание новой страны",
+                                            name = "Создание нового индустриального кода",
                                             value = """
                                             {
-                                                "id": "DE",
-                                                "name": "Германия"
+                                                "name": "Информационные технологии"
                                             }
                                             """
                                     ),
                                     @ExampleObject(
-                                            name = "Обновление существующей страны",
+                                            name = "Обновление существующего кода",
                                             value = """
-                                            {
-                                                "id": "RU",
-                                                "name": "Российская Федерация"
-                                            }
-                                            """
+                            {
+                                "id": 1,
+                                "name": "Строительство и ремонт"
+                            }
+                            """
                                     )
                             }
                     )
             )
-            @Valid @RequestBody CountryDTO countryDTO) {
-        log.info("Request to save country: {}", countryDTO);
 
-        CountryDTO savedCountry = countryService.save(countryDTO);
-        log.info("Country saved: {}", savedCountry);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCountry);
+            @Valid @RequestBody IndustryDTO industryDTO) {
+        log.info("Request to save industry: {}", industryDTO);
+
+        IndustryDTO savedIndustry = industryService.save(industryDTO);
+        log.info("Industry saved: {}", savedIndustry);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedIndustry);
     }
 
 }
