@@ -80,7 +80,6 @@ public class UIIndustryController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                    Получить индустриальный код по ID с учетом ролевых ограничений:
-                   
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
@@ -131,7 +130,6 @@ public class UIIndustryController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Удалить индустриальный код с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **CONTRACTOR_SUPERUSER** - имеет возможность удаления записей
                     - **SUPERUSER** - имеет полный доступ к сервису
@@ -182,7 +180,6 @@ public class UIIndustryController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Сохранить индустриальный код с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **CONTRACTOR_SUPERUSER** - имеет возможность сохранения/редактирования записей
                     - **SUPERUSER** - имеет полный доступ к сервису

@@ -41,7 +41,6 @@ public class UICountryController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                    Получение всех активных стран с учетом ролевых ограничений:
-                   
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
@@ -80,7 +79,6 @@ public class UICountryController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                    Получить страну по ID с учетом ролевых ограничений:
-                   
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
@@ -131,7 +129,6 @@ public class UICountryController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Удалить страну с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **CONTRACTOR_SUPERUSER** - имеет возможность удаления записей
                     - **SUPERUSER** - имеет полный доступ к сервису
@@ -182,7 +179,6 @@ public class UICountryController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Сохранить страну с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **CONTRACTOR_SUPERUSER** - имеет возможность сохранения записей
                     - **SUPERUSER** - имеет полный доступ к сервису
