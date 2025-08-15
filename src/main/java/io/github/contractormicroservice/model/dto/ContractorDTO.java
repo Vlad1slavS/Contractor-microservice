@@ -1,6 +1,7 @@
 package io.github.contractormicroservice.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.github.contractormicroservice.model.entity.Contractor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -108,4 +109,17 @@ public class ContractorDTO {
     @NotNull(message = "Организационная форма не может быть null")
     private Long orgForm;
 
+    public static ContractorDTO from(Contractor savedContractor) {
+        return ContractorDTO.builder()
+                .id(savedContractor.getId())
+                .parentId(savedContractor.getParentId())
+                .name(savedContractor.getName())
+                .nameFull(savedContractor.getNameFull())
+                .inn(savedContractor.getInn())
+                .ogrn(savedContractor.getOgrn())
+                .country(savedContractor.getCountry())
+                .industry(savedContractor.getIndustry())
+                .orgForm(savedContractor.getOrgForm())
+                .build();
+    }
 }

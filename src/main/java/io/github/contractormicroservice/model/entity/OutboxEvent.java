@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -12,6 +13,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Сущность Outbox
@@ -21,10 +23,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table("outbox_events")
-public class OutboxEvent implements Persistable<Long> {
+public class OutboxEvent implements Persistable<UUID> {
 
     @Id
-    private Long id;
+    private UUID id;
 
     private String aggregateId;
 

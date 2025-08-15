@@ -17,6 +17,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -76,7 +77,7 @@ public class OutboxServiceTest {
     void publishOutboxEvents_shouldPublish() {
 
         OutboxEvent outboxEvent = OutboxEvent.builder()
-                .id(1L)
+                .id(UUID.randomUUID())
                 .aggregateId("test-123")
                 .eventType("TestEvent")
                 .aggregateType("Test")
@@ -88,14 +89,13 @@ public class OutboxServiceTest {
                 .build();
 
 
-
         List<OutboxEvent> events = new ArrayList<>();
         events.add(outboxEvent);
         when(outboxEventRepository.findUnprocessedEvents()).thenReturn(events);
 
         outboxService.publishOutboxEvents();
 
-        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), anyString(), any(CorrelationData.class));
+        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), anyString(), any(), any(CorrelationData.class));
     }
 
     @Test

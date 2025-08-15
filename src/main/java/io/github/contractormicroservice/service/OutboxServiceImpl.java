@@ -6,6 +6,7 @@ import io.github.contractormicroservice.model.entity.OutboxEvent;
 import io.github.contractormicroservice.repository.outbox.OutboxEventRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -13,7 +14,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -47,6 +50,7 @@ public class OutboxServiceImpl implements OutboxService {
             String payloadJson = objectMapper.writeValueAsString(payload);
 
             OutboxEvent event = OutboxEvent.builder()
+                    .id(UUID.randomUUID())
                     .aggregateId(aggregateId)
                     .aggregateType(aggregateType)
                     .eventType(eventType)
@@ -86,13 +90,18 @@ public class OutboxServiceImpl implements OutboxService {
                         event.getExchange(),
                         event.getRoutingKey(),
                         event.getPayload(),
+                        message -> {
+                            message.getMessageProperties().setMessageId(event.getId().toString());
+                            return message;
+                        },
                         correlationData
                 );
+
 
                 CorrelationData.Confirm confirm = correlationData.getFuture().get(rabbitReceiveTimeout, TimeUnit.SECONDS);
 
                 if (confirm.isAck()) {
-                    outboxEventRepository.markAsProcessed(event.getId());
+                    outboxEventRepository.markAsProcessed(event.getId().toString());
                     log.debug("Event published and confirmed: id={}", event.getId());
                 } else {
                     log.error("Event rejected by broker: id={}, reason={}",
@@ -109,5 +118,6 @@ public class OutboxServiceImpl implements OutboxService {
         }
 
     }
+
 
 }
