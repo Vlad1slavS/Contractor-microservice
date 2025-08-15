@@ -1,6 +1,5 @@
 package io.github.contractormicroservice.service;
 
-import io.github.auditlib.annotation.AuditLog;
 import io.github.contractormicroservice.exception.EntityNotFoundException;
 import io.github.contractormicroservice.model.dto.ContractorDTO;
 import io.github.contractormicroservice.model.entity.Contractor;
@@ -10,6 +9,7 @@ import io.github.contractormicroservice.repository.contractor.ContractorReposito
 import io.github.contractormicroservice.repository.country.CountryRepository;
 import io.github.contractormicroservice.repository.industry.IndustryRepository;
 import io.github.contractormicroservice.repository.orgForm.OrgFormRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -20,22 +20,29 @@ import java.util.Optional;
 @Service
 public class ContractorServiceImpl implements ContractorService {
 
+    @Value("${application.rabbit.contractors.exchange:contractors_contractor_exchange}")
+    private String contractorsContractorExchange;
+
+    @Value("${application.rabbit.contractors.routing-key:contractor.updated}")
+    private String contractorsRoutingKey;
+
     private final ContractorRepository contractorRepository;
     private final CountryRepository countryRepository;
     private final IndustryRepository industryRepository;
     private final OrgFormRepository orgFormRepository;
+    private final OutboxService outboxService;
 
     public ContractorServiceImpl(ContractorRepository contractorRepository,
                                  CountryRepository countryRepository,
                                  IndustryRepository industryRepository,
-                                 OrgFormRepository orgFormRepository) {
+                                 OrgFormRepository orgFormRepository, OutboxService outboxService) {
         this.contractorRepository = contractorRepository;
         this.countryRepository = countryRepository;
         this.industryRepository = industryRepository;
         this.orgFormRepository = orgFormRepository;
+        this.outboxService = outboxService;
     }
 
-    @AuditLog(logLevel = AuditLog.LogLevel.DEBUG)
     public Contractor getOne(String id) {
         return contractorRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new EntityNotFoundException("Contractor not found with id: " + id));
@@ -47,6 +54,7 @@ public class ContractorServiceImpl implements ContractorService {
         return contractorRepository.save(contractor);
     }
 
+    @Transactional("transactionManager")
     public Contractor save(ContractorDTO contractorDTO) {
 
         Optional<Contractor> contractor = contractorRepository.findByIdWithDetails(contractorDTO.getId());
@@ -81,11 +89,27 @@ public class ContractorServiceImpl implements ContractorService {
                     .build();
 
             newContractor.markAsNew();
+
         }
 
         validateFK(newContractor);
 
-        return contractorRepository.save(newContractor);
+        Contractor savedContractor = contractorRepository.save(newContractor);
+
+        ContractorDTO messageDTO = ContractorDTO.from((savedContractor));
+
+        String eventType = savedContractor.isNew() ? "CREATED" : "UPDATED";
+
+        outboxService.saveOutboxEvent(
+                savedContractor.getId(),
+                "Contractor",
+                eventType,
+                messageDTO,
+                contractorsContractorExchange,
+                contractorsRoutingKey
+        );
+
+        return savedContractor;
 
     }
 
