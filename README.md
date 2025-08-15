@@ -7,9 +7,9 @@
 Для локального развертывания приложения необходимо установить:
 
 
-- [Docker](https://docs.docker.com/get-docker/) 
-
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- Docker
+- Docker Compose
+- RabbitMQ
 
 ## Архитектура
 
@@ -54,6 +54,7 @@ docker-compose logs -f
 ```bash
 docker-compose logs -f app
 docker-compose logs -f postgres
+docker-compose logs -f rabbit
 ```
 
 ## Доступ к приложению
@@ -61,7 +62,8 @@ docker-compose logs -f postgres
 После успешного запуска:
 
 - **Приложение**: http://localhost:8080
-- **База данных PostgreSQL**: localhost:5432
+- **База данных PostgreSQL**: http://localhost:5432
+- **Rabbit UI**: http://localhost:15672
 
 ## Подключение к базе данных
 
@@ -73,6 +75,13 @@ docker-compose logs -f postgres
 - **Username**: contractor
 - **Password**: 1234
 
+Параметры подключения к RabbitMQ:
+- **Host**: localhost
+- **Port**: 5672
+- **Username**: guest
+- **Password**: guest
+
+
 ## Конфигурация
 
 Основные переменные окружения для приложения:
@@ -81,3 +90,10 @@ docker-compose logs -f postgres
 - `SPRING_DATASOURCE_USERNAME` - имя пользователя БД
 - `SPRING_DATASOURCE_PASSWORD` - пароль БД
 - `SPRING_LIQUIBASE_CHANGE-LOG` - путь к changelog файлу Liquibase
+- `spring.rabbitmq.host` - хост для подключения к RabbitMQ
+- `spring.rabbitmq.port` - порт
+- `spring.rabbitmq.username` - username
+- `spring.rabbitmq.password` - пароль
+- `spring.rabbitmq.template.receive-timeout` - Таймаут (в миллисекундах) для получения сообщения
+- `spring.rabbitmq.template.reply-timeout` - Таймаут на ожидание ответа 
+
