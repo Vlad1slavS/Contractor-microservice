@@ -109,17 +109,17 @@ public class ContractorDTO {
     @NotNull(message = "Организационная форма не может быть null")
     private Long orgForm;
 
-    public static ContractorDTO from(Contractor contractor) {
+    public static ContractorDTO from(Contractor savedContractor) {
         return ContractorDTO.builder()
-                .id(contractor.getId())
-                .parentId(contractor.getParentId())
-                .name(contractor.getName())
-                .nameFull(contractor.getNameFull())
-                .inn(contractor.getInn())
-                .ogrn(contractor.getOgrn())
-                .country(contractor.getCountry())
-                .industry(contractor.getIndustry())
-                .orgForm(contractor.getOrgForm())
+                .id(savedContractor.getId())
+                .parentId(savedContractor.getParentId())
+                .name(savedContractor.getName())
+                .nameFull(savedContractor.getNameFull())
+                .inn(savedContractor.getInn())
+                .ogrn(savedContractor.getOgrn())
+                .country(savedContractor.getCountry())
+                .industry(savedContractor.getIndustry())
+                .orgForm(savedContractor.getOrgForm())
                 .build();
     }
 
