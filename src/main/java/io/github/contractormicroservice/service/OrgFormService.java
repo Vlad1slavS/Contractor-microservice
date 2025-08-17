@@ -1,6 +1,5 @@
 package io.github.contractormicroservice.service;
 
-import io.github.contractormicroservice.model.dto.CountryDTO;
 import io.github.contractormicroservice.model.dto.OrgFormDTO;
 
 import java.util.List;
@@ -36,4 +35,5 @@ public interface OrgFormService {
      * @return сохраненная организационная форма
      */
     OrgFormDTO save(OrgFormDTO countryDTO);
+
 }

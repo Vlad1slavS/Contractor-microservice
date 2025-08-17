@@ -1,12 +1,9 @@
 package io.github.contractormicroservice.service;
 
 import io.github.contractormicroservice.model.dto.ContractorDTO;
-import io.github.contractormicroservice.model.dto.CountryDTO;
 import io.github.contractormicroservice.model.entity.Contractor;
 import io.github.contractormicroservice.model.entity.ContractorFilter;
 import io.github.contractormicroservice.model.entity.Pagination;
-
-import java.util.List;
 
 /**
  * Интерфейс сервиса для работы со странами
@@ -42,4 +39,5 @@ public interface ContractorService {
      * @return сохраненный контрагент
      */
     Pagination searchContractors(ContractorFilter searchRequest, Integer page, Integer limit);
+
 }
