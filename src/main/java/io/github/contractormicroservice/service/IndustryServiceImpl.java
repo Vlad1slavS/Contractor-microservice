@@ -5,6 +5,8 @@ import io.github.contractormicroservice.exception.EntityNotFoundException;
 import io.github.contractormicroservice.model.dto.IndustryDTO;
 import io.github.contractormicroservice.model.entity.Industry;
 import io.github.contractormicroservice.repository.industry.IndustryRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class IndustryServiceImpl implements IndustryService {
         this.industryRepository = industryRepository;
     }
 
+    @Cacheable(value = "industries", key = "'all'")
     public List<IndustryDTO> getAllActive() {
         List<Industry> industries = industryRepository.findAllActive();
         return IndustryDTO.fromEntityList(industries);
@@ -33,6 +36,7 @@ public class IndustryServiceImpl implements IndustryService {
         return IndustryDTO.fromEntity(industry);
     }
 
+    @CacheEvict(value = "industries", key = "'all'")
     public IndustryDTO deleteOne(Long id) {
         Industry industry = industryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Industry not found with id: " + id));
@@ -42,6 +46,7 @@ public class IndustryServiceImpl implements IndustryService {
     }
 
     @AuditLog(logLevel = AuditLog.LogLevel.DEBUG)
+    @CacheEvict(value = "industries", key = "'all'")
     public IndustryDTO save(IndustryDTO industryDTO) {
 
         if (industryDTO.getId() != null) {
