@@ -1,6 +1,5 @@
 package io.github.contractormicroservice.service;
 
-import io.github.auditlib.annotation.AuditLog;
 import io.github.contractormicroservice.exception.EntityNotFoundException;
 import io.github.contractormicroservice.model.dto.IndustryDTO;
 import io.github.contractormicroservice.model.entity.Industry;

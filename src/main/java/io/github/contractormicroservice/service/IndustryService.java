@@ -35,4 +35,5 @@ public interface IndustryService {
      * @return сохраненный индустриальный код
      */
     IndustryDTO save(IndustryDTO industryDTO);
+
 }

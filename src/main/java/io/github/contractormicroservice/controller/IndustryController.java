@@ -2,7 +2,6 @@ package io.github.contractormicroservice.controller;
 
 import io.github.contractormicroservice.model.dto.IndustryDTO;
 import io.github.contractormicroservice.service.IndustryService;
-import io.github.contractormicroservice.service.IndustryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -235,4 +234,5 @@ public class IndustryController {
         log.info("Industry saved: {}", savedIndustry);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedIndustry);
     }
+
 }

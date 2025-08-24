@@ -269,7 +269,6 @@ public class ContractorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedContractor);
     }
 
-
     @Operation(summary = "Поиск контрагентов с пагинацией и фильтрами")
     @ApiResponses(value = {
             @ApiResponse(

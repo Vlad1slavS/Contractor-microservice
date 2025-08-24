@@ -41,7 +41,6 @@ public class UIOrgFormController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Получение всех активных организационных форм с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
@@ -81,7 +80,6 @@ public class UIOrgFormController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Получение организационной формы по ID с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **USER** - может просматривать, но не редактировать, справочную информацию
                     - **CONTRACTOR_SUPERUSER** - повтор роли USER + возможность редактирования (сохранения и удаления)
@@ -131,7 +129,6 @@ public class UIOrgFormController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Удалить организационную форму с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **CONTRACTOR_SUPERUSER** - имеет возможность редактирования (сохранения и удаления)
                     - **SUPERUSER** - имеет полный доступ к сервису
@@ -182,7 +179,6 @@ public class UIOrgFormController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "bearerAuth"),
             description = """
                     Сохранить организационную форму с учетом ролевых ограничений:
-                    
                     **Доступ по ролям:**
                     - **CONTRACTOR_SUPERUSER** - имеет возможность редактирования (сохранения и удаления)
                     - **SUPERUSER** - имеет полный доступ к сервису
