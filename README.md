@@ -10,11 +10,8 @@
 - Docker
 - Docker Compose
 - RabbitMQ
+- Redis
 
-## Архитектура
-
-- **postgres** - база данных PostgreSQL
-- **app** - Java Spring Boot приложение
 
 ## Локальное развертывание
 
@@ -55,6 +52,7 @@ docker-compose logs -f
 docker-compose logs -f app
 docker-compose logs -f postgres
 docker-compose logs -f rabbit
+docker-compose logs -f redis
 ```
 
 ## Доступ к приложению
@@ -81,6 +79,11 @@ docker-compose logs -f rabbit
 - **Username**: guest
 - **Password**: guest
 
+Параметры подключения к Redis:
+- **Host**: localhost
+- **Port**: 6379
+- **Password**: -
+
 
 ## Конфигурация
 
@@ -95,5 +98,9 @@ docker-compose logs -f rabbit
 - `spring.rabbitmq.username` - username
 - `spring.rabbitmq.password` - пароль
 - `spring.rabbitmq.template.receive-timeout` - Таймаут (в миллисекундах) для получения сообщения
-- `spring.rabbitmq.template.reply-timeout` - Таймаут на ожидание ответа 
+- `spring.rabbitmq.template.reply-timeout` - Таймаут на ожидание ответа
+- `spring.data.redis.host` - хост redis
+- `spring.data.redis.port` - порт
+- `spring.data.redis.password` - пароль
+
 

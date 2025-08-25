@@ -4,6 +4,8 @@ import io.github.contractormicroservice.exception.EntityNotFoundException;
 import io.github.contractormicroservice.model.dto.OrgFormDTO;
 import io.github.contractormicroservice.model.entity.OrgForm;
 import io.github.contractormicroservice.repository.orgForm.OrgFormRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class OrgFormServiceImpl implements OrgFormService {
         this.orgFormRepository = orgFormRepository;
     }
 
+    @Cacheable(value = "orgForms", key = "'all'")
     public List<OrgFormDTO> getAllActive() {
         List<OrgForm> orgForms = orgFormRepository.findAllActive();
         return OrgFormDTO.fromEntityList(orgForms);
@@ -32,6 +35,7 @@ public class OrgFormServiceImpl implements OrgFormService {
         return OrgFormDTO.fromEntity(orgForm);
     }
 
+    @CacheEvict(value = "orgForms", key = "'all'")
     public OrgFormDTO deleteOne(Long id) {
         OrgForm orgForm = orgFormRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("OrgForm not found with id: " + id));
@@ -40,6 +44,7 @@ public class OrgFormServiceImpl implements OrgFormService {
         return OrgFormDTO.fromEntity(orgForm);
     }
 
+    @CacheEvict(value = "orgForms", key = "'all'")
     public OrgFormDTO save(OrgFormDTO orgFormDTO) {
 
         if (orgFormDTO.getId() != null) {

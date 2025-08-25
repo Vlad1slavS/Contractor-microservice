@@ -4,6 +4,8 @@ import io.github.contractormicroservice.exception.EntityNotFoundException;
 import io.github.contractormicroservice.model.dto.CountryDTO;
 import io.github.contractormicroservice.model.entity.Country;
 import io.github.contractormicroservice.repository.country.CountryRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class CountryServiceImpl implements CountryService {
         this.countryRepository = countryRepository;
     }
 
+    @Cacheable(value = "countries", key = "'all'")
     public List<CountryDTO> getAllActive() {
         List<Country> countries = countryRepository.findAllActive();
         return CountryDTO.fromEntityList(countries);
@@ -32,6 +35,7 @@ public class CountryServiceImpl implements CountryService {
         return CountryDTO.fromEntity(country);
     }
 
+    @CacheEvict(value = "countries", key = "'all'")
     public CountryDTO deleteOne(String id) {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Country not found with id: " + id));
@@ -40,6 +44,7 @@ public class CountryServiceImpl implements CountryService {
         return CountryDTO.fromEntity(country);
     }
 
+    @CacheEvict(value = "countries", key = "'all'")
     public CountryDTO save(CountryDTO countryDTO) {
 
         Optional<Country> country = countryRepository.findById(countryDTO.getId());
